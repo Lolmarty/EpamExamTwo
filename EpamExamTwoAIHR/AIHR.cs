@@ -156,21 +156,26 @@ namespace EpamExamTwoAIHR
 
             if (places_left == 0)
             {
-                foreach (Ranks rank in rankedApplicants.Keys)
-                {
-                    foreach (var applicant in rankedApplicants[rank])
-                    {
-                        StringBuilder report =
-                            new StringBuilder(applicant.Item1);
-                        report.AppendLine(NoVacancy);
-                        rejectedApplicants.Add(Tuple.Create(
-                            report.ToString(), applicant.Item2));
-                    }
-                }
+                RegenerateRejectReports();
             }
             else
             {
                 Console.WriteLine(NotEnoughApplicants);
+            }
+        }
+
+        private void RegenerateRejectReports()
+        {
+            foreach (Ranks rank in rankedApplicants.Keys)
+            {
+                foreach (var applicant in rankedApplicants[rank])
+                {
+                    StringBuilder report =
+                        new StringBuilder(applicant.Item1);
+                    report.AppendLine(NoVacancy);
+                    rejectedApplicants.Add(Tuple.Create(
+                        report.ToString(), applicant.Item2));
+                }
             }
         }
 
