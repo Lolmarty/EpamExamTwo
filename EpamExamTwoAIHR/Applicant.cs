@@ -8,7 +8,7 @@ namespace EpamExamTwoAIHR
 {
     class HumanBaseClass
     {
-        
+
         public bool knowsHTML { get; set; }
         public bool knowsSQL { get; set; }
         public bool knowsJS { get; set; }
@@ -17,22 +17,22 @@ namespace EpamExamTwoAIHR
 
         public HumanBaseClass()
         {
-            
+
         }
 
         public HumanBaseClass(bool knows_html, bool knows_sql,
             bool knows_js, double years_of_experience, uint course_)
         {
-                knowsHTML = knows_html;
-                knowsSQL = knows_sql;
-                knowsJS = knows_js;
-                yearsOfExperience = Math.Max(years_of_experience, 0);
-                course = course_;
+            knowsHTML = knows_html;
+            knowsSQL = knows_sql;
+            knowsJS = knows_js;
+            yearsOfExperience = Math.Max(years_of_experience, 0);
+            course = course_;
         }
-        
+
     }
 
-    class Applicant: HumanBaseClass
+    class Applicant : HumanBaseClass
     {
         public string name { get; set; }
 
@@ -52,7 +52,7 @@ namespace EpamExamTwoAIHR
         {
             name = name_;
         }
-        
+
 
         public string GenerateCV()
         {
@@ -60,7 +60,7 @@ namespace EpamExamTwoAIHR
             cvBuilder.AppendLine();
             if (knowsHTML || knowsSQL || knowsJS)
                 cvBuilder.AppendLine(languagesEntry);
-            if (knowsHTML) cvBuilder.AppendLine(knowsHTMLCVEntry); 
+            if (knowsHTML) cvBuilder.AppendLine(knowsHTMLCVEntry);
             if (knowsSQL) cvBuilder.AppendLine(knowsSQLCVEntry);
             if (knowsJS) cvBuilder.AppendLine(knowsJSCVEntry);
             if (yearsOfExperience > 0)
@@ -91,7 +91,7 @@ namespace EpamExamTwoAIHR
                 knows_html, knows_sql, knows_js, years_of_experience,
                 course_)
         {
-            
+
         }
 
         public bool CheckCriterion(bool knows_html, bool knows_sql,
@@ -108,46 +108,21 @@ namespace EpamExamTwoAIHR
             bool knows_js, double years_of_experience, uint course_)
         {
             StringBuilder report = new StringBuilder();
-            if (this.knowsHTML == knows_html)
-            {
-                report.AppendLine(reportHTMLEntry);
-            }
-            else
-            {
-             report.AppendLine(reportHTMLEntryFail);   
-            }
-            if (this.knowsSQL == knows_sql)
-            {
-                report.AppendLine(reportSQLEntry);
-            }
-            else
-            {
-             report.AppendLine(reportSQLEntryFail);   
-            }
-            if (this.knowsJS == knows_js)
-            {
-                report.AppendLine(reportJSEntry);
-            }
-            else
-            {
-             report.AppendLine(reportJSEntryFail);   
-            }
-            if (this.yearsOfExperience <= years_of_experience)
-            {
-                report.AppendLine(reportExperienceEntry);
-            }
-            else
-            {
-             report.AppendLine(reportExperienceEntryFail);   
-            }
-            if (this.course <= course_)
-            {
-                report.AppendLine(reportCourseEntry);
-            }
-            else
-            {
-             report.AppendLine(reportCourseEntryFail);   
-            }
+            report.AppendLine((this.knowsHTML == knows_html)
+                ? reportHTMLEntry
+                : reportHTMLEntryFail);
+            report.AppendLine((this.knowsSQL == knows_sql)
+                ? reportSQLEntry
+                : reportSQLEntryFail);
+            report.AppendLine((this.knowsJS == knows_js)
+                ? reportJSEntry
+                : reportJSEntryFail);
+            report.AppendLine((this.yearsOfExperience <= years_of_experience)
+                ? reportExperienceEntry
+                : reportExperienceEntryFail);
+            report.AppendLine((this.course <= course_)
+                ? reportCourseEntry
+                : reportCourseEntryFail);
             return report.ToString();
         }
     }

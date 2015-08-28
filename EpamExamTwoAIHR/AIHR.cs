@@ -75,7 +75,18 @@ namespace EpamExamTwoAIHR
                     course = uint.Parse(match.Groups[1].Captures[0].Value);
                 }
             }
+            RankApplicant(name,
+                knowsHTML,
+                knowsSQL,
+                knowsJS,
+                yearsOfExperience,
+                course);
 
+        }
+
+        private void RankApplicant(string name, bool knowsHTML, bool knowsSQL,
+            bool knowsJS, double yearsOfExperience, uint course)
+        {
             List<Ranks> ranks = new List<Ranks>();
             foreach (Ranks rank in criteriaMap.Keys)
             {
