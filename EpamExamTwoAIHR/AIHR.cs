@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EpamExamTwoAIHR
 {
+    internal delegate T ParseNumber<T>(string input);
     class AIHR
     {
 
@@ -55,33 +57,29 @@ namespace EpamExamTwoAIHR
             bool knowsHTML = cv.Contains(Applicant.knowsHTMLCVEntry);
             bool knowsSQL = cv.Contains(Applicant.knowsSQLCVEntry);
             bool knowsJS = cv.Contains(Applicant.knowsJSCVEntry);
-            double yearsOfExperience = 0;
-            uint course = 0;
-            if (cv.Contains(ExperienceKeyword))
-            {
-                Regex capturer = new Regex(ExperienceRegex);
-                Match match = capturer.Match(cv);
-                if (match.Success)
-                {
-                    yearsOfExperience = double.Parse(match.Groups[1].Captures[0].Value);
-                }
-            }
+            double yearsOfExperience = InitVariableByRegex(cv, CourseKeyword, CourseRegex,
+                double.Parse);
+            uint course = InitVariableByRegex(cv, CourseKeyword, CourseRegex,
+                uint.Parse);
+            RankApplicant(name, knowsHTML, knowsSQL, knowsJS,
+                yearsOfExperience, course);
+
+        }
+
+        private T InitVariableByRegex<T>(string cv, string keyword,
+            string regex, ParseNumber<T> parser) where T: new()
+        {
+            T value = new T();
             if (cv.Contains(CourseKeyword))
             {
                 Regex capturer = new Regex(CourseRegex);
                 Match match = capturer.Match(cv);
                 if (match.Success)
                 {
-                    course = uint.Parse(match.Groups[1].Captures[0].Value);
+                    value = parser(match.Groups[1].Captures[0].Value);
                 }
             }
-            RankApplicant(name,
-                knowsHTML,
-                knowsSQL,
-                knowsJS,
-                yearsOfExperience,
-                course);
-
+            return value;
         }
 
         private void RankApplicant(string name, bool knowsHTML, bool knowsSQL,
@@ -90,31 +88,20 @@ namespace EpamExamTwoAIHR
             List<Ranks> ranks = new List<Ranks>();
             foreach (Ranks rank in criteriaMap.Keys)
             {
-                if (criteriaMap[rank].CheckCriterion(knowsHTML,
-                    knowsSQL,
-                    knowsJS,
-                    yearsOfExperience,
-                    course))
+                if (criteriaMap[rank].CheckCriterion(knowsHTML, knowsSQL,
+                    knowsJS, yearsOfExperience, course)) 
                 {
                     ranks.Add(rank);
                 }
             }
-            Applicant applicant = new Applicant(name,
-                knowsHTML,
-                knowsSQL,
-                knowsJS,
-                yearsOfExperience,
-                course);
+            Applicant applicant = new Applicant(name, knowsHTML, knowsSQL,
+                knowsJS, yearsOfExperience, course);
             if (ranks.Count > 0)
             {
                 Ranks max_rank =
                     (Ranks)ranks.Select(item => (int)item).Max();
                 string report = criteriaMap[max_rank].GenerateReport(
-                    knowsHTML,
-                    knowsSQL,
-                    knowsJS,
-                    yearsOfExperience,
-                    course);
+                    knowsHTML, knowsSQL, knowsJS, yearsOfExperience, course);
                 rankedApplicants[max_rank].Add(Tuple.Create(report, applicant));
             }
             else
@@ -122,11 +109,7 @@ namespace EpamExamTwoAIHR
                 Ranks min_rank = (Ranks)0;
 
                 string report = criteriaMap[min_rank].GenerateReport(
-                    knowsHTML,
-                    knowsSQL,
-                    knowsJS,
-                    yearsOfExperience,
-                    course);
+                    knowsHTML, knowsSQL, knowsJS, yearsOfExperience, course);
                 unrankedApplicants.Add(Tuple.Create(report, applicant));
             }
         }
