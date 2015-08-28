@@ -57,7 +57,7 @@ namespace EpamExamTwoAIHR
             bool knowsHTML = cv.Contains(Applicant.knowsHTMLCVEntry);
             bool knowsSQL = cv.Contains(Applicant.knowsSQLCVEntry);
             bool knowsJS = cv.Contains(Applicant.knowsJSCVEntry);
-            double yearsOfExperience = InitVariableByRegex(cv, CourseKeyword, CourseRegex,
+            double yearsOfExperience = InitVariableByRegex(cv, ExperienceKeyword, ExperienceRegex,
                 double.Parse);
             uint course = InitVariableByRegex(cv, CourseKeyword, CourseRegex,
                 uint.Parse);
